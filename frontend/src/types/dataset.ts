@@ -11,3 +11,14 @@ export interface DatasetMeta {
     rowCount: number;
     numericColumnCount: number;
 }
+
+export interface MatrixEntry {
+    colA: string;
+    colB: string;
+    r: number;
+    n: number;
+    xMean: number;
+    yMean: number;
+    xStdDev: number;
+    yStdDev: number;
+}
