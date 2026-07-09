@@ -4,10 +4,11 @@ import type { ParsedDataset, DatasetMeta } from "../types/dataset";
 
 interface Props {
     onDatasetLoaded: (dataset: ParsedDataset, meta: DatasetMeta) => void;
+    description: string;
+    onDescriptionChange: (value: string) => void;
 }
 
-export function CSVUploader({ onDatasetLoaded }: Props) {
-    const [description, setDescription] = useState("");
+export function CSVUploader({ onDatasetLoaded, description, onDescriptionChange }: Props) {
     const [fileName, setFileName] = useState("");
     const [error, setError] = useState("");
     const fileRef = useRef<HTMLInputElement>(null);
@@ -52,7 +53,7 @@ export function CSVUploader({ onDatasetLoaded }: Props) {
                     id="description"
                     type="text"
                     value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    onChange={(e) => onDescriptionChange(e.target.value)}
                     placeholder="e.g. Housing prices in Ames, Iowa from 2006 to 2010"
                     style={{ width: "100%", marginTop: "0.25rem", padding: "0.4rem" }}
                 />

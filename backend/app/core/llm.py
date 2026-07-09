@@ -2,12 +2,13 @@ import os
 import httpx
 import json
 from dotenv import load_dotenv
+from pathlib import Path
 
-load_dotenv()
+load_dotenv(dotenv_path=Path(__file__).resolve().parent.parent.parent / ".env")
 
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
-OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "google/gemini-flash-1.5")
-OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:streamGenerateContent?alt=sse&key={GEMINI_API_KEY}"
 
 SYSTEM_PROMPT = """You are a statistical analyst reviewing correlation analysis results.
 
@@ -25,7 +26,7 @@ Your response must follow this structure:
 Be specific, concise, and grounded only in the numbers provided. Do not speculate beyond what the data supports."""
 
 
-def build_payload(data: dict) -> dict:
+def build_user_message(data: dict) -> str:
     top_pairs = sorted(
         data["matrix"],
         key=lambda e: abs(e["r"]),
@@ -39,34 +40,39 @@ def build_payload(data: dict) -> dict:
         for e in top_pairs
     ])
 
-    user_message = f"""Dataset description: {data['description']}
+    return f"""Dataset description: {data['description']}
 
 Top correlated pairs (sorted by absolute r value):
 {pairs_text}"""
 
-    return {
-        "model": OPENROUTER_MODEL,
-        "stream": True,
-        "messages": [
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": user_message}
-        ]
-    }
-
 
 async def stream_analysis(data: dict):
-    payload = build_payload(data)
+    user_message = build_user_message(data)
+
+    payload = {
+        "system_instruction": {
+            "parts": [{"text": SYSTEM_PROMPT}]
+        },
+        "contents": [
+            {
+                "role": "user",
+                "parts": [{"text": user_message}]
+            }
+        ],
+        "generationConfig": {
+            "temperature": 0.4,
+            "maxOutputTokens": 1024,
+        }
+    }
 
     async with httpx.AsyncClient(timeout=60) as client:
         async with client.stream(
             "POST",
-            OPENROUTER_URL,
-            headers={
-                "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-                "Content-Type": "application/json",
-            },
+            GEMINI_URL,
+            headers={"Content-Type": "application/json"},
             json=payload,
         ) as response:
+            print("STATUS:", response.status_code, flush=True)
             async for line in response.aiter_lines():
                 if not line.startswith("data: "):
                     continue
@@ -75,7 +81,9 @@ async def stream_analysis(data: dict):
                     break
                 try:
                     parsed = json.loads(chunk)
-                    delta = parsed["choices"][0]["delta"].get("content", "")
+                    delta = (
+                        parsed["candidates"][0]["content"]["parts"][0]["text"]
+                    )
                     if delta:
                         yield delta
                 except (json.JSONDecodeError, KeyError):
