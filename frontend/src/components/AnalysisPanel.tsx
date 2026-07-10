@@ -17,64 +17,91 @@ export function AnalysisPanel({ matrix, description }: Props) {
     const canRun = description.trim().length > 0 && !isLoading;
 
     return (
-        <div style={{ marginBottom: "2rem" }}>
-            <h2>AI Interpretation</h2>
+        <div>
+            <span style={eyebrowStyle}>Step 4</span>
+            <h2 style={headingStyle}>AI interpretation</h2>
+            <p style={subStyle}>
+                The AI analyst will explain what these correlations mean in the context of your dataset.
+                All statistics are computed by the Pearson engine, the AI only provides natural language reasoning.
+            </p>
 
-            {!description.trim() && (
-                <p style={{ color: "#999", fontSize: "0.85rem" }}>
-                    Add a dataset description above to enable analysis.
-                </p>
-            )}
-
-            <button
-                onClick={handleRun}
-                disabled={!canRun}
-                style={{
-                    padding: "0.6rem 1.5rem",
-                    background: canRun ? "#2563eb" : "#ccc",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: canRun ? "pointer" : "not-allowed",
-                    fontSize: "0.95rem",
-                }}
-            >
-                {isLoading ? "Analyzing..." : "Run AI Analysis"}
-            </button>
-
-            {error && (
-                <p style={{ color: "red", marginTop: "0.75rem" }}>{error}</p>
-            )}
-
-            {(interpretation || isLoading) && (
-                <div
-                    style={{
-                        marginTop: "1rem",
-                        padding: "1rem",
-                        background: "#f8f9fa",
+            <div style={{ marginTop: "1.5rem" }}>
+                {!description.trim() && (
+                    <div style={{
+                        background: "#FFFBEB",
+                        border: "1px solid #FDE68A",
                         borderRadius: "6px",
-                        border: "1px solid #e0e0e0",
-                        lineHeight: "1.7",
-                        fontSize: "0.95rem",
-                        whiteSpace: "pre-wrap",
-                        minHeight: "100px",
+                        padding: "0.75rem 1rem",
+                        fontSize: "0.825rem",
+                        color: "#92400E",
+                        marginBottom: "1rem",
+                    }}>
+                        Add a dataset description in Step 1 to enable AI analysis.
+                    </div>
+                )}
+
+                <button
+                    onClick={handleRun}
+                    disabled={!canRun}
+                    style={{
+                        padding: "0.65rem 1.75rem",
+                        background: canRun ? "#2563EB" : "#E2E8F0",
+                        color: canRun ? "#FFFFFF" : "#94A3B8",
+                        border: "none",
+                        borderRadius: "6px",
+                        cursor: canRun ? "pointer" : "not-allowed",
+                        fontSize: "0.875rem",
+                        fontWeight: 600,
+                        fontFamily: "Inter, sans-serif",
+                        transition: "background 0.15s",
                     }}
                 >
-                    {interpretation}
-                    {isLoading && (
-                        <span
-                            style={{
+                    {isLoading ? "Analyzing..." : "Run AI analysis"}
+                </button>
+
+                {error && (
+                    <div style={{
+                        background: "#FEF2F2",
+                        border: "1px solid #FECACA",
+                        borderRadius: "6px",
+                        padding: "0.75rem 1rem",
+                        fontSize: "0.825rem",
+                        color: "#991B1B",
+                        marginTop: "1rem",
+                    }}>
+                        {error}
+                    </div>
+                )}
+
+                {(interpretation || isLoading) && (
+                    <div style={{
+                        marginTop: "1.25rem",
+                        padding: "1.5rem",
+                        background: "#F8FAFC",
+                        borderRadius: "8px",
+                        border: "1px solid #E2E8F0",
+                        lineHeight: "1.75",
+                        fontSize: "0.9rem",
+                        color: "#1E293B",
+                        whiteSpace: "pre-wrap",
+                        minHeight: "120px",
+                        fontFamily: "Inter, sans-serif",
+                    }}>
+                        {interpretation}
+                        {isLoading && (
+                            <span style={{
                                 display: "inline-block",
-                                width: "8px",
+                                width: "2px",
                                 height: "14px",
-                                background: "#2563eb",
+                                background: "#2563EB",
                                 marginLeft: "2px",
+                                verticalAlign: "text-bottom",
                                 animation: "blink 1s step-end infinite",
-                            }}
-                        />
-                    )}
-                </div>
-            )}
+                            }} />
+                        )}
+                    </div>
+                )}
+            </div>
 
             <style>{`
         @keyframes blink {
@@ -85,3 +112,26 @@ export function AnalysisPanel({ matrix, description }: Props) {
         </div>
     );
 }
+
+const eyebrowStyle: React.CSSProperties = {
+    fontSize: "0.7rem",
+    fontWeight: 600,
+    letterSpacing: "0.08em",
+    textTransform: "uppercase",
+    color: "#2563EB",
+    display: "block",
+    marginBottom: "0.4rem",
+};
+
+const headingStyle: React.CSSProperties = {
+    fontSize: "1.15rem",
+    fontWeight: 700,
+    color: "#0F172A",
+    letterSpacing: "-0.01em",
+};
+
+const subStyle: React.CSSProperties = {
+    fontSize: "0.875rem",
+    color: "#64748B",
+    marginTop: "0.3rem",
+};
