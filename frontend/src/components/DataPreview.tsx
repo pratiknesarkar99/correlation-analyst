@@ -10,7 +10,6 @@ export function DataPreview({ dataset, meta }: Props) {
 
     return (
         <div>
-            <span style={eyebrowStyle}>Step 2</span>
             <h2 style={headingStyle}>Data preview</h2>
             <div style={{ display: "flex", gap: "1.5rem", marginTop: "0.75rem", marginBottom: "1.25rem" }}>
                 <Stat label="Rows" value={meta.rowCount.toLocaleString()} />
@@ -77,16 +76,6 @@ function Stat({ label, value }: { label: string; value: number | string }) {
         </div>
     );
 }
-
-const eyebrowStyle: React.CSSProperties = {
-    fontSize: "0.7rem",
-    fontWeight: 600,
-    letterSpacing: "0.08em",
-    textTransform: "uppercase",
-    color: "#2563EB",
-    display: "block",
-    marginBottom: "0.4rem",
-};
 
 const headingStyle: React.CSSProperties = {
     fontSize: "1.15rem",

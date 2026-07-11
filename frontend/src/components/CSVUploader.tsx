@@ -41,7 +41,6 @@ export function CSVUploader({ onDatasetLoaded, description, onDescriptionChange 
 
     return (
         <div>
-            <SectionLabel>Step 1</SectionLabel>
             <h2 style={headingStyle}>Upload your dataset</h2>
             <p style={subStyle}>
                 Upload a CSV file and describe your data so the AI can provide relevant insights.
@@ -109,22 +108,6 @@ export function CSVUploader({ onDatasetLoaded, description, onDescriptionChange 
                 )}
             </div>
         </div>
-    );
-}
-
-function SectionLabel({ children }: { children: React.ReactNode }) {
-    return (
-        <span style={{
-            fontSize: "0.7rem",
-            fontWeight: 600,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            color: "#2563EB",
-            display: "block",
-            marginBottom: "0.4rem",
-        }}>
-            {children}
-        </span>
     );
 }
 

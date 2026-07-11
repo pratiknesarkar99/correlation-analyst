@@ -18,7 +18,6 @@ export function AnalysisPanel({ matrix, description }: Props) {
 
     return (
         <div>
-            <span style={eyebrowStyle}>Step 4</span>
             <h2 style={headingStyle}>AI interpretation</h2>
             <p style={subStyle}>
                 The AI analyst will explain what these correlations mean in the context of your dataset.
@@ -112,16 +111,6 @@ export function AnalysisPanel({ matrix, description }: Props) {
         </div>
     );
 }
-
-const eyebrowStyle: React.CSSProperties = {
-    fontSize: "0.7rem",
-    fontWeight: 600,
-    letterSpacing: "0.08em",
-    textTransform: "uppercase",
-    color: "#2563EB",
-    display: "block",
-    marginBottom: "0.4rem",
-};
 
 const headingStyle: React.CSSProperties = {
     fontSize: "1.15rem",
